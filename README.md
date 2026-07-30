@@ -415,3 +415,109 @@ If you like my work, consider following me and checking out my repositories.
 
 
 [![An image of @muditagrawal2007's Holopin badges, which is a link to view their full Holopin profile](https://holopin.me/muditagrawal2007)](https://holopin.io/@muditagrawal2007)
+
+---
+
+# 👋 Welcome, Visitor!
+
+<div align="center">
+
+<a href="https://komarev.com/ghpvc/?username=muditagrawal2007&label=Profile%20Views&color=0e75b6&style=for-the-badge" target="_blank">
+  <img src="https://komarev.com/ghpvc/?username=muditagrawal2007&label=Profile%20Views&color=0e75b6&style=for-the-badge" alt="Profile Views"/>
+</a>
+
+<a href="https://github.com/muditagrawal2007?tab=followers" target="_blank">
+  <img src="https://img.shields.io/github/followers/muditagrawal2007?style=for-the-badge&logo=github&label=Followers&color=blue" alt="Followers"/>
+</a>
+
+<img src="https://img.shields.io/badge/Visitor%20Counter-Live-brightgreen?style=for-the-badge&logo=github-actions&logoColor=white" alt="Visitor Counter Live"/>
+
+</div>
+
+---
+
+# 🔗 Quick Connect
+
+<div align="center">
+
+[![GitHub](https://img.shields.io/badge/GitHub-@muditagrawal2007-181717?style=for-the-badge&logo=github)](https://github.com/muditagrawal2007)
+[![Profile Summary](https://img.shields.io/badge/Profile-Click%20to%20View-58A6FF?style=for-the-badge&logo=probot)](https://profile-summary-for-x.com/lookup/muditagrawal2007)
+[![Open Source](https://img.shields.io/badge/Open%20Source-Contributions-success?style=for-the-badge&logo=open-source-initiative)](https://github.com/muditagrawal2007?tab=repositories&type=source)
+
+</div>
+
+---
+
+# 🎯 Right Now
+
+<div align="center">
+
+| 🔭 Focus | Status |
+|----------|--------|
+| Building **AI-powered tools** | 🟢 Active |
+| Learning **Kubernetes & System Design** | 🟡 In Progress |
+| Contributing to **Open Source** | 🟢 Active |
+| Exploring **LLM Engineering** | 🟡 In Progress |
+
+> 🚀 *This section is auto-updated — see workflow in `.github/workflows/update-profile.yml`*
+
+</div>
+
+---
+
+# 📌 Recent Activity
+
+<div align="center">
+
+<!--START_SECTION:activity-->
+1.  🎉 Merged PR #1 in [muditagrawal2007/semantic-plagiarism-detector](https://github.com/muditagrawal2007/semantic-plagiarism-detector/pull/1)
+2.  💪 Opened PR #1081 in [Ganesh-403/semantic-plagiarism-detector](https://github.com/Ganesh-403/semantic-plagiarism-detector/pull/1081)
+3.  🔒 Reviewing security issues in [Dreamstick9/filedrop](https://github.com/muditagrawal2007/filedrop)
+<!--END_SECTION:activity-->
+
+</div>
+
+---
+
+# 🎮 Interactive Widgets
+
+<div align="center">
+
+### 🎲 Click below to interact!
+
+<a href="https://www.google.com/search?q=mudit+agrawal" target="_blank">
+  <img src="https://img.shields.io/badge/🔍_Search_My_Name-Click_Here-blueviolet?style=for-the-badge" alt="Search My Name"/>
+</a>
+
+<a href="https://github.com/muditagrawal2007?tab=repositories" target="_blank">
+  <img src="https://img.shields.io/badge/📂_Browse_Repos-77_Repos-success?style=for-the-badge" alt="Browse Repos"/>
+</a>
+
+<a href="https://github.com/sponsors/muditagrawal2007" target="_blank">
+  <img src="https://img.shields.io/badge/❤️_Sponsor-Me-red?style=for-the-badge&logo=github-sponsors" alt="Sponsor Me"/>
+</a>
+
+</div>
+
+---
+
+# 🌟 Show Some Love
+
+<div align="center">
+
+If you like my work, consider starring my repos! ⭐
+
+[![Stars](https://img.shields.io/github/stars/muditagrawal2007?style=for-the-badge&logo=github&color=FFD700)](https://github.com/muditagrawal2007?tab=repositories)
+[![Repos](https://img.shields.io/badge/dynamic/json?label=Public%20Repos&query=%24.public_repos&url=https%3A%2F%2Fapi.github.com%2Fusers%2Fmuditagrawal2007&style=for-the-badge&color=blue)](https://github.com/muditagrawal2007?tab=repositories)
+
+</div>
+
+---
+
+<div align="center">
+
+### 💬 *"Code is poetry. Open source is the anthology."*
+
+</div>
+
+

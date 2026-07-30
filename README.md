@@ -52,9 +52,9 @@ public:
 Live snapshot of open pull requests in upstream repos (auto-refreshed every 6h by `pr-radar.yml`).
 
 <!--START_SECTION:pr-radar-->
-_No open PRs · last check: 2026-07-30 11:29 UTC_
+_No open PRs · last check: 2026-07-30 19:43 UTC_
 
-<sub>_🔄 Last refresh: 2026-07-30 11:29 UTC</sub>
+<sub>_🔄 Last refresh: 2026-07-30 19:43 UTC</sub>
 <!--END_SECTION:pr-radar-->
 
 ---
@@ -110,18 +110,18 @@ _No open PRs · last check: 2026-07-30 11:29 UTC_
 ### 📈 Recent Activity
 
 <!--START_SECTION:activity-->
-1.  ⬆️ Pushed 0 commit(s) to **[muditagrawal2007/muditagrawal2007]**()
-1.  ⬆️ Pushed 0 commit(s) to **[muditagrawal2007/muditagrawal2007]**()
-1.  ⬆️ Pushed 0 commit(s) to **[muditagrawal2007/muditagrawal2007]**()
-1.  ⬆️ Pushed 0 commit(s) to **[muditagrawal2007/muditagrawal2007]**()
-1.  💬 Commented on #372 in **[bitflicker64/Termstory]**
-1.  🔀 **OPENED** PR in **[bitflicker64/Termstory]** — 
-1.  ✨ Created branch in **[muditagrawal2007/Termstory]**
-1.  ⬆️ Pushed 0 commit(s) to **[muditagrawal2007/muditagrawal2007]**()
-1.  ⬆️ Pushed 0 commit(s) to **[muditagrawal2007/muditagrawal2007]**()
-1.  ⬆️ Pushed 0 commit(s) to **[muditagrawal2007/muditagrawal2007]**()
+1.  🔀 **MERGED** PR in **[bitflicker64/Termstory]** — 
+1.  ⬆️ Pushed 0 commit(s) to **[muditagrawal2007/Termstory]**()
+1.  ⬆️ Pushed 0 commit(s) to **[muditagrawal2007/Termstory]**()
+1.  🔀 **MERGED** PR in **[bitflicker64/Termstory]** — 
+1.  ⬆️ Pushed 0 commit(s) to **[muditagrawal2007/Termstory]**()
+1.  ⬆️ Pushed 0 commit(s) to **[muditagrawal2007/Termstory]**()
+1.  ⬆️ Pushed 0 commit(s) to **[muditagrawal2007/Termstory]**()
+1.  ⬆️ Pushed 0 commit(s) to **[muditagrawal2007/Termstory]**()
+1.  ⬆️ Pushed 0 commit(s) to **[muditagrawal2007/Termstory]**()
+1.  ⬆️ Pushed 0 commit(s) to **[muditagrawal2007/Termstory]**()
 
-<sub>_🔄 Last refresh: 2026-07-30 11:29 UTC</sub>
+<sub>_🔄 Last refresh: 2026-07-30 19:43 UTC</sub>
 <!--END_SECTION:activity-->
 
 ---

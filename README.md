@@ -97,9 +97,9 @@ _Auto-refreshed every 6h · last update: 2026-07-30 11:06 UTC_
 
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/muditagrawal2007/muditagrawal2007/output/github-contribution-grid-snake-dark.svg" alt="Snake eating your contributions" width="100%"/>
+<img src="https://raw.githubusercontent.com/muditagrawal2007/muditagrawal2007/main/assets/snake.svg" alt="Snake eating your contributions" width="100%"/>
 
-*Re-generated every 12h by `.github/workflows/snake.yml`.*
+*Custom Python-built animated snake. Re-generated every 12h by `.github/workflows/snake.yml` using real GitHub contribution data.*
 
 </div>
 

@@ -46,38 +46,12 @@ public:
 
 ---
 
-## 🎮 Interactive Bits
-
-### 🧊 3D Skill Cube
-
-<div align="center">
-
-<img src="https://raw.githubusercontent.com/muditagrawal2007/muditagrawal2007/main/assets/skill-cube.svg" width="500" alt="3D rotating skill cube"/>
-
-*Pure SVG with embedded CSS keyframes — actually rotates 360° on your screen, not a static image.*
-
-</div>
-
-### 🖥 Live Terminal
-
-<div align="center">
-
-<img src="https://raw.githubusercontent.com/muditagrawal2007/muditagrawal2007/main/assets/terminal.svg" width="700" alt="Live terminal"/>
-
-*Animated SVG terminal with blinking cursor + sequential line reveals.*
-
-</div>
-
----
-
-## 📊 Real-Time Stats
+## 📊 Real-Time Stats (auto-updated every 6h)
 
 <!--START_SECTION:dynamic-stats-->
 <div align="center">
 
-📦 **Public repos:** 77 · ⭐ **Stars earned:** 1 · 🔱 **Total forks:** 1 · 👥 **Followers:** 0 · 📝 **Public gists:** 0  
-
-_Auto-refreshed every 6h · last update: 2026-07-30 11:06 UTC_
+_Auto-refreshed every 6h via [live-stats workflow](https://github.com/muditagrawal2007/muditagrawal2007/actions)_
 
 </div>
 <!--END_SECTION:dynamic-stats-->
@@ -93,7 +67,7 @@ _Auto-refreshed every 6h · last update: 2026-07-30 11:06 UTC_
 
 ---
 
-## 🐍 Animated Snake
+## 🐍 Animated Snake (real contribution data)
 
 <div align="center">
 

@@ -35,11 +35,12 @@
 
 | Metric | Value | Updated |
 |--------|------:|---------|
-| ⭐ Stars earned | _auto_ | _auto_ |
-| 🔱 Total forks | _auto_ | _auto_ |
-| 📝 Commits (last year) | _auto_ | _auto_ |
-| 🎯 Issues opened | _auto_ | _auto_ |
-| 🚀 PRs merged | _auto_ | _auto_ |
+| 📦 Public repos | 77 | 2026-07-30 11:00 UTC |
+| ⭐ Stars earned | 1 | 2026-07-30 11:00 UTC |
+| 🔱 Total forks | 1 | 2026-07-30 11:00 UTC |
+| 👥 Followers | 0 | 2026-07-30 11:00 UTC |
+| 📝 Public gists | 0 | 2026-07-30 11:00 UTC |
+
 
 </div>
 <!--END_SECTION:live-stats-->
@@ -107,7 +108,11 @@
 <!--START_SECTION:dynamic-stats-->
 <div align="center">
 
-> 📡 _Stats will appear here after first workflow run_ (`.github/workflows/live-stats.yml`)
+<img height="180em" src="https://github-readme-stats.vercel.app/api?username=muditagrawal2007&show_icons=true&theme=tokyonight&hide_border=true&count_private=true&include_all_commits=true&t=1785409235"/>
+
+<img height="180em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=muditagrawal2007&layout=compact&theme=tokyonight&hide_border=true&t=1785409235"/>
+
+_Refreshed: 2026-07-30 11:00 UTC_
 
 </div>
 <!--END_SECTION:dynamic-stats-->
@@ -189,10 +194,10 @@ public:
 
 <!-- Cache-busting timestamp = fresh data every browser load -->
 <img height="180em"
-src="https://github-readme-stats.vercel.app/api?username=muditagrawal2007&show_icons=true&theme=tokyonight&hide_border=true&count_private=true&include_all_commits=true&t=<!--ts-->"/>
+src="https://github-readme-stats.vercel.app/api?username=muditagrawal2007&show_icons=true&theme=tokyonight&hide_border=true&count_private=true&include_all_commits=true1785409235"/>
 
 <img height="180em"
-src="https://github-readme-stats.vercel.app/api/top-langs/?username=muditagrawal2007&layout=compact&theme=tokyonight&hide_border=true&t=<!--ts-->"/>
+src="https://github-readme-stats.vercel.app/api/top-langs/?username=muditagrawal2007&layout=compact&theme=tokyonight&hide_border=true1785409235"/>
 
 </div>
 
@@ -229,7 +234,7 @@ src="https://github-readme-stats.vercel.app/api/top-langs/?username=muditagrawal
 <div align="center">
 
 <!-- 🔥 Streak with auto-refreshed cache buster updated by workflow -->
-<img src="https://streak-stats.demolab.com?user=muditagrawal2007&theme=tokyonight&hide_border=true&v=<!--ts-->"/>
+<img src="https://streak-stats.demolab.com?user=muditagrawal2007&theme=tokyonight&hide_border=true1785409235"/>
 
 </div>
 
@@ -240,7 +245,7 @@ src="https://github-readme-stats.vercel.app/api/top-langs/?username=muditagrawal
 <div align="center">
 
 <!-- Graph with cache buster -->
-<img src="https://github-readme-activity-graph.vercel.app/graph?username=muditagrawal2007&theme=tokyo-night&hide_border=true&v=<!--ts-->"/>
+<img src="https://github-readme-activity-graph.vercel.app/graph?username=muditagrawal2007&theme=tokyo-night&hide_border=true1785409235"/>
 
 </div>
 
@@ -604,9 +609,12 @@ If you like my work, consider following me and checking out my repositories.
 <div align="center">
 
 <!--START_SECTION:activity-->
-1.  🎉 Merged PR #1 in [muditagrawal2007/semantic-plagiarism-detector](https://github.com/muditagrawal2007/semantic-plagiarism-detector/pull/1)
-2.  💪 Opened PR #1081 in [Ganesh-403/semantic-plagiarism-detector](https://github.com/Ganesh-403/semantic-plagiarism-detector/pull/1081)
-3.  🔒 Reviewing security issues in [Dreamstick9/filedrop](https://github.com/muditagrawal2007/filedrop)
+1.  📝 Pushed to **muditagrawal2007/muditagrawal2007** (null commits)
+1.  📝 Pushed to **muditagrawal2007/muditagrawal2007** (null commits)
+1.  📝 Pushed to **muditagrawal2007/muditagrawal2007** (null commits)
+1.  📝 Pushed to **muditagrawal2007/muditagrawal2007** (null commits)
+1.  📝 Pushed to **muditagrawal2007/muditagrawal2007** (null commits)
+_Auto-updated every 6 hours. Run workflow manually to refresh sooner._
 <!--END_SECTION:activity-->
 
 </div>

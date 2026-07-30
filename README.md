@@ -79,6 +79,11 @@ _Auto-refreshed every 6h · last update: 2026-07-30 11:24 UTC_
 
 </div>
 
+
+
+[![An image of @muditagrawal2007's Holopin badges, which is a link to view their full Holopin profile](https://holopin.me/muditagrawal2007)](https://holopin.io/@muditagrawal2007)
+
+
 ---
 
 ## 🤝 Connect

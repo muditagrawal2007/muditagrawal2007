@@ -2,7 +2,7 @@ name: Live Stats Updater
 
 on:
   schedule:
-    - cron: "0 */6 * * *"
+    - cron: "0 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -43,21 +43,35 @@ jobs:
           repos = json.loads(Path("/tmp/repos.json").read_text())
 
           now = datetime.datetime.utcnow()
+          ts  = str(int(now.timestamp()))
           upd = now.strftime("%Y-%m-%d %H:%M UTC")
 
-          block = (
+          stats_block = (
               f"📦 **Public repos:** {user.get('public_repos', 0)} · "
               f"⭐ **Stars earned:** {sum(r.get('stargazers_count', 0) for r in repos)} · "
               f"🔱 **Total forks:** {sum(r.get('forks_count', 0) for r in repos)} · "
               f"👥 **Followers:** {user.get('followers', 0)} · "
               f"📝 **Public gists:** {user.get('public_gists', 0)}  \n\n"
-              f"_Auto-refreshed every 6h · last update: {upd}_"
+              f"_🔄 Last refresh: {upd} · auto-updates hourly · [view source](https://github.com/muditagrawal2007/muditagrawal2007/actions)_"
           )
 
+          new = txt
+
+          # Inject cache-busting `&t=<ts>` into every dynamic image URL so each
+          # browser load sees fresh data (not vercel's CDN cache).
+          url_targets = [
+              "https://github-readme-stats.vercel.app/api?username=muditagrawal2007&show_icons=true&theme=tokyonight&hide_border=true&include_all_commits=true",
+              "https://github-readme-stats.vercel.app/api/top-langs/?username=muditagrawal2007&layout=compact&theme=tokyonight&hide_border=true",
+              "https://github-readme-activity-graph.vercel.app/graph?username=muditagrawal2007&theme=tokyo-night&hide_border=true",
+          ]
+          for url in url_targets:
+              new = new.replace(url, f"{url}&t={ts}")
+
+          # Replace placeholder block
           new = re.sub(
               r"<!--START_SECTION:dynamic-stats-->.*?<!--END_SECTION:dynamic-stats-->",
-              f"<!--START_SECTION:dynamic-stats-->\n<div align=\"center\">\n\n{block}\n\n</div>\n<!--END_SECTION:dynamic-stats-->",
-              txt, flags=re.DOTALL,
+              f"<!--START_SECTION:dynamic-stats-->\n<div align=\"center\">\n\n{stats_block}\n\n</div>\n<!--END_SECTION:dynamic-stats-->",
+              new, flags=re.DOTALL,
           )
 
           p.write_text(new)
@@ -70,5 +84,5 @@ jobs:
           git config user.email "live-stats-bot@users.noreply.github.com"
           git config user.name   "live-stats-bot"
           git add README.md
-          git commit -m "chore: refresh live stats [skip ci]"
+          git commit -m "chore: refresh live stats + cache-bust cards [skip ci]"
           git push

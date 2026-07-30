@@ -21,16 +21,17 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
+          cat > query.json <<'QUERY'
+          {"query":"{ user(login: \"muditagrawal2007\") { contributionsCollection { contributionCalendar { totalContributions weeks { contributionDays { date contributionCount weekday } } } } } }"}
+          QUERY
           curl -sL \
             -H "Authorization: Bearer $GH_TOKEN" \
             -H "Accept: application/vnd.github+json" \
-            -X POST \
-            --data-raw '{"query":"{ user(login: \"muditagrawal2007\") { contributionsCollection { contributionCalendar { totalContributions weeks { contributionDays { date contributionCount weekday } } } } } }"}' \
+            -H "Content-Type: application/json" \
+            --data-binary @query.json \
             "https://api.github.com/graphql" > cal.json
           ls -la cal.json
-          head -c 250 cal.json
-          echo ""
-          python3 -c "import json; d = json.load(open('cal.json')); print('total:', d['data']['user']['contributionsCollection']['contributionCalendar']['totalContributions'])"
+          python3 -c "import json; d=json.load(open('cal.json')); print('total:', d.get('data',{}).get('user',{}).get('contributionsCollection',{}).get('contributionCalendar',{}).get('totalContributions', 'ERR'))"
 
       - name: Generate snake SVG
         run: |
@@ -38,12 +39,11 @@ jobs:
           import json, sys
           from pathlib import Path
 
-          raw = Path("cal.json").read_text()
-          if not raw.strip():
-              print("empty cal.json"); sys.exit(0)
-          data = json.loads(raw)
+          data = json.loads(Path("cal.json").read_text())
           if "data" not in data:
-              print("no data key in cal.json:", data); sys.exit(0)
+              print("no data key, skipping"); sys.exit(0)
+          if not data["data"].get("user"):
+              print("no user data"); sys.exit(0)
 
           cal = data["data"]["user"]["contributionsCollection"]["contributionCalendar"]
           grid = [[d["contributionCount"] for d in w["contributionDays"]] for w in cal["weeks"]]

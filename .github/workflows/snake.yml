@@ -36,21 +36,36 @@ jobs:
           python3 - <<'PY'
           import json
           from pathlib import Path
-          live = json.loads(Path("cal_live.json").read_text()).get("data", {}).get("user", {}).get("contributionsCollection", {}).get("contributionCalendar", {})
-          live_total = live.get("totalContributions", 0)
-          Path("cal_live.json").write_text(json.dumps(live, indent=2) if live and live_total > 0 else "{}")
 
-          if live_total == 0:
-              try:
-                  committed = Path("cal.json").read_text()
-                  Path("cal_use.json").write_text(committed)
-                  print(f"Using committed cal.json (live was 0)")
-              except FileNotFoundError:
-                  Path("cal_use.json").write_text("{}")
-                  print(f"No committed cal.json")
-          else:
-              Path("cal_use.json").write_text(json.dumps(live))
+          def extract_cal(data):
+              """Return just the contributionCalendar object (with weeks)."""
+              if not data or not data.get("data"):
+                  return None
+              user = data["data"].get("user")
+              if not user:
+                  return None
+              return user.get("contributionsCollection", {}).get("contributionCalendar")
+
+          live_raw = json.loads(Path("cal_live.json").read_text())
+          live_cal = extract_cal(live_raw)
+          live_total = live_cal.get("totalContributions", 0) if live_cal else 0
+
+          if live_total > 0 and live_cal and live_cal.get("weeks"):
+              Path("cal_use.json").write_text(json.dumps(live_cal))
               print(f"Using live data: {live_total} contributions")
+          else:
+              try:
+                  committed_raw = json.loads(Path("cal.json").read_text())
+                  committed_cal = extract_cal(committed_raw)
+                  if committed_cal and committed_cal.get("weeks"):
+                      Path("cal_use.json").write_text(json.dumps(committed_cal))
+                      print(f"Using committed cal.json: {committed_cal.get('totalContributions', 0)} contributions")
+                  else:
+                      Path("cal_use.json").write_text("{}")
+                      print(f"No usable data")
+              except Exception as e:
+                  Path("cal_use.json").write_text("{}")
+                  print(f"No committed cal.json: {e}")
           PY
 
       - name: Generate snake SVG

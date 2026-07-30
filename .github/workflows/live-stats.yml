@@ -2,7 +2,7 @@ name: Live Stats Updater
 
 on:
   schedule:
-    - cron: "0 * * * *"
+    - cron: "0 */6 * * *"
   workflow_dispatch:
 
 permissions:
@@ -16,7 +16,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Fetch fresh stats
+      - name: Fetch user stats
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -26,6 +26,26 @@ jobs:
             "https://api.github.com/users/$USER" > /tmp/user.json
           curl -sL -H "Authorization: token $GH_TOKEN" \
             "https://api.github.com/users/$USER/repos?per_page=100&type=owner" > /tmp/repos.json
+
+      - name: Fetch open PRs (PR Radar)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          USER=muditagrawal2007
+          data=$(curl -sL -H "Accept: application/vnd.github+json" -H "Authorization: token $GH_TOKEN" \
+            "https://api.github.com/search/issues?q=author:$USER+is:pr+is:open&per_page=12")
+          echo "$data" > /tmp/prs.json
+
+      - name: Fetch recent activity
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          USER=muditagrawal2007
+          data=$(curl -sL -H "Accept: application/vnd.github+json" -H "Authorization: token $GH_TOKEN" \
+            "https://api.github.com/users/$USER/events/public?per_page=10")
+          echo "$data" > /tmp/events.json
 
       - name: Update README
         env:
@@ -41,36 +61,82 @@ jobs:
 
           user  = json.loads(Path("/tmp/user.json").read_text())
           repos = json.loads(Path("/tmp/repos.json").read_text())
+          prs   = json.loads(Path("/tmp/prs.json").read_text())
+          evts  = json.loads(Path("/tmp/events.json").read_text())
 
           now = datetime.datetime.utcnow()
-          ts  = str(int(now.timestamp()))
+          ts  = int(now.timestamp())
           upd = now.strftime("%Y-%m-%d %H:%M UTC")
 
+          # --- Stats block ---
           stats_block = (
               f"📦 **Public repos:** {user.get('public_repos', 0)} · "
               f"⭐ **Stars earned:** {sum(r.get('stargazers_count', 0) for r in repos)} · "
               f"🔱 **Total forks:** {sum(r.get('forks_count', 0) for r in repos)} · "
               f"👥 **Followers:** {user.get('followers', 0)} · "
               f"📝 **Public gists:** {user.get('public_gists', 0)}  \n\n"
-              f"_🔄 Last refresh: {upd} · auto-updates hourly · [view source](https://github.com/muditagrawal2007/muditagrawal2007/actions)_"
+              f"_🔄 Last refresh: {upd} · auto-updates every 6h · [view source](https://github.com/muditagrawal2007/muditagrawal2007/actions)_"
           )
+
+          # --- PR Radar block ---
+          pr_items = prs.get("items", [])
+          if pr_items:
+              radar_lines = [f"1.  🟢 **PR** in **[{pr['repository']['full_name']}]({pr['html_url']})** — {pr.get('title', '')[:80]}".replace("\n", " ")
+                            for pr in pr_items[:10]]
+              radar_block = "\n".join(f"{i+1}.  {line}" for i, line in enumerate(radar_lines))
+          else:
+              radar_block = f"_No open PRs · last check: {upd}_"
+
+          # --- Activity block ---
+          act_lines = []
+          for e in evts[:10]:
+              t = e.get("type")
+              repo = e.get("repo", {}).get("name", "?")
+              if t == "PushEvent":
+                  n = e.get("payload", {}).get("size", 0)
+                  act_lines.append(f"1.  ⬆️ Pushed {n} commit(s) to **[{repo}]**({e.get('repo',{}).get('html_url','')})")
+              elif t == "PullRequestEvent":
+                  action = e.get("payload", {}).get("action", "").upper()
+                  pr = e.get("payload", {}).get("pull_request", {})
+                  act_lines.append(f"1.  🔀 **{action}** PR in **[{repo}]** — {pr.get('title','')[:60]}")
+              elif t == "CreateEvent":
+                  ref = e.get("payload", {}).get("ref_type", "?")
+                  act_lines.append(f"1.  ✨ Created {ref} in **[{repo}]**")
+              elif t == "IssueCommentEvent":
+                  issue = e.get("payload", {}).get("issue", {}).get("number", "?")
+                  act_lines.append(f"1.  💬 Commented on #{issue} in **[{repo}]**")
+              elif t == "WatchEvent":
+                  act_lines.append(f"1.  ⭐ Starred **[{repo}]**")
+              else:
+                  act_lines.append(f"1.  📌 {t} on **[{repo}]**")
+          activity_block = "\n".join(act_lines[:10]) if act_lines else f"_No recent activity · last check: {upd}_"
 
           new = txt
 
-          # Inject cache-busting `&t=<ts>` into every dynamic image URL so each
-          # browser load sees fresh data (not vercel's CDN cache).
-          url_targets = [
-              "https://github-readme-stats.vercel.app/api?username=muditagrawal2007&show_icons=true&theme=tokyonight&hide_border=true&include_all_commits=true",
-              "https://github-readme-stats.vercel.app/api/top-langs/?username=muditagrawal2007&layout=compact&theme=tokyonight&hide_border=true",
-              "https://github-readme-activity-graph.vercel.app/graph?username=muditagrawal2007&theme=tokyo-night&hide_border=true",
-          ]
-          for url in url_targets:
-              new = new.replace(url, f"{url}&t={ts}")
+          # --- Cache-busting timestamps on every stats image URL ---
+          for marker, value in (("&t=<!--ts-->", f"&t={ts}"),
+                                ("&v=<!--ts-->", f"&v={ts}"),
+                                ("<!--ts-->",     f"{ts}")):
+              new = new.replace(marker, value)
 
-          # Replace placeholder block
+          # --- Stats block ---
           new = re.sub(
               r"<!--START_SECTION:dynamic-stats-->.*?<!--END_SECTION:dynamic-stats-->",
               f"<!--START_SECTION:dynamic-stats-->\n<div align=\"center\">\n\n{stats_block}\n\n</div>\n<!--END_SECTION:dynamic-stats-->",
+              new, flags=re.DOTALL,
+          )
+
+          # --- PR Radar block ---
+          new = re.sub(
+              r"<!--START_SECTION:pr-radar-->.*?<!--END_SECTION:pr-radar-->",
+              f"<!--START_SECTION:pr-radar-->\n{radar_block}\n\n<sub>_🔄 Last refresh: {upd}</sub>\n<!--END_SECTION:pr-radar-->",
+              new, flags=re.DOTALL,
+          )
+
+          # --- Activity block ---
+          new = re.sub(
+              r"<!--START_SECTION:activity-->.*?<!--END_SECTION:activity-->",
+              f"<!--START_SECTION:activity-->\n{activity_block}\n\n<sub>_🔄 Last refresh: {upd}</sub>\n<!--END_SECTION:activity-->",
               new, flags=re.DOTALL,
           )
 
@@ -84,5 +150,5 @@ jobs:
           git config user.email "live-stats-bot@users.noreply.github.com"
           git config user.name   "live-stats-bot"
           git add README.md
-          git commit -m "chore: refresh live stats + cache-bust cards [skip ci]"
+          git commit -m "chore: refresh PR radar + activity + cache-bust cards [skip ci]"
           git push

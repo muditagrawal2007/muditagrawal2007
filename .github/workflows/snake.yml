@@ -1,8 +1,6 @@
-name: Generate Snake (3D + Standard)
+name: Generate Custom Snake SVG
 
 on:
-  push:
-    branches: [main]
   schedule:
     - cron: "0 */12 * * *"
   workflow_dispatch:
@@ -15,40 +13,84 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Generate standard snake SVG
-        uses: Platane/snk@v3
         with:
-          github_user_name: muditagrawal2007
-          outputs: |
-            dist/github-contribution-grid-snake.svg
-            dist/github-contribution-grid-snake-dark.svg?palette=github-dark
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Generate 3D variant (multi-path)
-        uses: Platane/snk@v3
-        with:
-          github_user_name: muditagrawal2007
-          outputs: |
-            dist/github-contribution-grid-3d.svg?color_snake=%23ff8c00&color_dots=%231a1a1a,%23111111,%23090909,%23505050,%23707070&color_blank=%230000000&snake_head=%23ff4500
-          svgStyle: "stroke-width:2;filter:drop-shadow(0 0 4px rgba(255,140,0,.7));"
-
-      - name: Deploy SVGs to gh-pages output branch
-        uses: crazy-max/ghaction-github-pages@v4
-        with:
-          target_branch: output
-          build_dir: dist
+      - name: Fetch contribution calendar
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Mirror 3D variant to snake-3d branch
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config user.email "bot@muditagrawal.invalid"
-          git config user.name "snake-bot"
-          git checkout --orphan snake-3d || git checkout snake-3d
-          git rm -rf . 2>/dev/null || true
-          mkdir -p .github/workflows
-          cp .github/workflows/snake.yml .github/workflows/snake.yml 2>/dev/null || true
-          cp dist/github-contribution-grid-3d.svg ./github-contribution-grid-3d.svg
-          git add github-contribution-grid-3d.svg
-          git commit -m "chore: regenerate 3D snake [skip ci]" --allow-empty
-          git push origin snake-3d --force
+          set -e
+          cat > /tmp/cal.json <<'QUERYEOF'
+          {
+            "query": "{ user(login: \"muditagrawal2007\") { contributionsCollection { contributionCalendar { weeks { contributionDays { date contributionCount weekday } } } } } }"
+          }
+          QUERYEOF
+          curl -sL \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d @/tmp/cal.json \
+            "https://api.github.com/graphql" > cal.json
+
+      - name: Generate snake SVG
+        run: |
+          python3 - <<'PY'
+          import json, sys
+          from pathlib import Path
+
+          cal = json.loads(Path("cal.json").read_text())["data"]["user"]["contributionsCollection"]["contributionCalendar"]
+          grid = [[d["contributionCount"] for d in w["contributionDays"]] for w in cal["weeks"]]
+
+          cells = [(di, wi, c) for wi, col in enumerate(grid) for di, c in enumerate(col) if c > 0]
+          if not cells:
+              print("no cells"); sys.exit(0)
+
+          cell_size = 16
+          w_px = len(grid) * cell_size
+          h_px = 7 * cell_size
+
+          p = []
+          p.append('<?xml version="1.0" encoding="UTF-8"?>')
+          p.append(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w_px + 32} {h_px + 64}" width="{w_px + 32}" height="{h_px + 64}">')
+          p.append('<style>')
+          p.append('.c0{fill:#161b22}.c1{fill:#01311f}.c2{fill:#034525}.c3{fill:#0f6d31}.c4{fill:#00c647}rect.cell{rx:2;ry:2}.snake{fill:#ff8c00;stroke:#ff4500;stroke-width:1.5}.snake-head{fill:#ff1744}')
+          p.append('</style>')
+          p.append('<rect width="100%" height="100%" fill="#0d1117"/>')
+
+          for wi, col in enumerate(grid):
+              for di, count in enumerate(col):
+                  cls = f"c{min(count, 4)}" if count else "c0"
+                  x, y = wi * cell_size + 4, (6 - di) * cell_size + 4
+                  p.append(f'<rect class="cell {cls}" x="{x}" y="{y}" width="14" height="14"/>')
+
+          ordered = sorted(cells, key=lambda c: (c[1], c[0]))
+          segs = [(wi*cell_size+11, (6-di)*cell_size+11, i) for i, (di, wi, _) in enumerate(ordered[-30:])]
+
+          for cx, cy, i in segs:
+              p.append(f'<circle class="snake" cx="{cx}" cy="{cy}" r="5"><animate attributeName="opacity" values="1;.4;1" dur="1.5s" begin="{i*0.05:.2f}s" repeatCount="indefinite"/></circle>')
+
+          if segs:
+              cx, cy, _ = segs[-1]
+              p.append(f'<circle class="snake-head" cx="{cx}" cy="{cy}" r="6"><animate attributeName="r" values="6;8;6" dur="0.6s" repeatCount="indefinite"/></circle>')
+
+          if len(segs) >= 2:
+              pts = " ".join(f"{x},{y}" for x, y, _ in segs[-20:])
+              p.append(f'<polyline points="{pts}" fill="none" stroke="#ff8c00" stroke-width="2" opacity=".4"><animate attributeName="opacity" values=".2;.8;.2" dur="3s" repeatCount="indefinite"/></polyline>')
+
+          p.append(f'<text x="8" y="{h_px + 30}" font-family="JetBrains Mono, monospace" font-size="11" fill="#58a6ff">Snake eating your real GitHub contributions</text>')
+          p.append('</svg>')
+
+          Path("snake-custom.svg").write_text("\n".join(p))
+          print("snake-custom.svg:", len("\n".join(p)), "bytes")
+          PY
+
+      - name: Commit and deploy
+        run: |
+          set -e
+          mkdir -p assets
+          cp snake-custom.svg assets/snake.svg
+          git config user.email "snake-bot@users.noreply.github.com"
+          git config user.name  "snake-bot"
+          git add assets/snake.svg
+          git commit -m "chore: regenerate custom snake [skip ci]" || echo "no changes"
+          git push

@@ -16,11 +16,10 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Fetch contribution calendar
+      - name: Try GraphQL (often returns 0 from workflow tokens)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          set -euo pipefail
           cat > query.json <<'QUERY'
           {"query":"{ user(login: \"muditagrawal2007\") { contributionsCollection { contributionCalendar { totalContributions weeks { contributionDays { date contributionCount weekday } } } } } }"}
           QUERY
@@ -29,67 +28,47 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             -H "Content-Type: application/json" \
             --data-binary @query.json \
-            "https://api.github.com/graphql" > cal.json
-          ls -la cal.json
-          python3 -c "import json; d=json.load(open('cal.json')); print('total:', d.get('data',{}).get('user',{}).get('contributionsCollection',{}).get('contributionCalendar',{}).get('totalContributions', 'ERR'))"
+            "https://api.github.com/graphql" > cal_live.json
+          python3 -c "import json; d=json.load(open('cal_live.json')); print('live total:', d.get('data',{}).get('user',{}).get('contributionsCollection',{}).get('contributionCalendar',{}).get('totalContributions', 0))"
 
-      - name: Fallback if no data
-        if: failure()
+      - name: Choose data source
         run: |
-          python3 -c "
+          python3 - <<'PY'
           import json
           from pathlib import Path
-          d = json.loads(Path('cal.json').read_text())
-          empty = (d.get('data') is None) or (d.get('data', {}).get('user') is None)
-          if empty or d.get('data', {}).get('user', {}).get('contributionsCollection', {}).get('contributionCalendar', {}).get('totalContributions', 0) == 0:
-              print('GraphQL returned no data — using git log for contributions')
-          "
+          live = json.loads(Path("cal_live.json").read_text()).get("data", {}).get("user", {}).get("contributionsCollection", {}).get("contributionCalendar", {})
+          live_total = live.get("totalContributions", 0)
+          Path("cal_live.json").write_text(json.dumps(live, indent=2) if live and live_total > 0 else "{}")
+
+          # If live has 0 contributions (workflow-token limitation), use committed snapshot
+          if live_total == 0:
+              try:
+                  committed = Path("cal.json").read_text()
+                  Path("cal_use.json").write_text(committed)
+                  print(f"Using committed cal.json (live was 0)")
+              except FileNotFoundError:
+                  Path("cal_use.json").write_text("{}")
+                  print(f"No committed cal.json")
+          else:
+              Path("cal_use.json").write_text(json.dumps(live))
+              print(f"Using live data: {live_total} contributions")
+          PY
 
       - name: Generate snake SVG
         run: |
           python3 - <<'PY'
-          import json, sys, os, subprocess
+          import json, sys
           from pathlib import Path
-          from datetime import datetime, timedelta
 
-          data = json.loads(Path("cal.json").read_text())
-          cal = None
-          if data.get("data") and data["data"].get("user"):
-              cal = data["data"]["user"]["contributionsCollection"]["contributionCalendar"]
-
-          # Fallback: derive a contribution grid from git log of the user's public activity
-          if not cal or cal.get("totalContributions", 0) == 0:
-              print("Building contribution grid from git log fallback…")
-              cutoff = (datetime.utcnow() - timedelta(days=365)).strftime("%Y-%m-%d")
-              r = subprocess.run(
-                  ["git", "log", "--pretty=format:%ad", "--date=short", "--all", "--no-merges"],
-                  cwd=Path(__file__).parent, capture_output=True, text=True
-              )
-              dates = sorted(set(r.stdout.splitlines()))
-              # Build full year-grid
-              grid = []
-              sun = datetime.utcnow() - timedelta(days=365)
-              sun = sun - timedelta(days=sun.weekday() + 1 % 7)  # back up to a Sunday
-              weeks = 53
-              counts = {}
-              for d in dates:
-                  if d < cutoff:
-                      continue
-                  counts[d] = counts.get(d, 0) + 1
-              cur = sun
-              while cur.weekday() != 6:
-                  cur += timedelta(days=1)
-              for _ in range(weeks):
-                  col = []
-                  for _ in range(7):
-                      col.append(counts.get(cur.strftime("%Y-%m-%d"), 0))
-                      cur += timedelta(days=1)
-                  grid.append(col)
-          else:
-              grid = [[d["contributionCount"] for d in w["contributionDays"]] for w in cal["weeks"]]
+          data = json.loads(Path("cal_use.json").read_text())
+          if not data.get("weeks"):
+              print("no data"); sys.exit(0)
+          cal = data
+          grid = [[d["contributionCount"] for d in w["contributionDays"]] for w in cal["weeks"]]
 
           cells = [(di, wi, c) for wi, col in enumerate(grid) for di, c in enumerate(col) if c > 0]
-          print(f"Grid: {len(grid)} weeks, {len(cells)} active cells")
+          total = cal.get("totalContributions", sum(c for col in grid for c in col))
+          print(f"Grid: {len(grid)} weeks, {len(cells)} active cells, total {total}")
           if not cells:
               sys.exit(0)
 
@@ -125,11 +104,12 @@ jobs:
               pts = " ".join(f"{x},{y}" for x, y, _ in segs[-20:])
               p.append(f'<polyline points="{pts}" fill="none" stroke="#ff8c00" stroke-width="2" opacity=".4"><animate attributeName="opacity" values=".2;.8;.2" dur="3s" repeatCount="indefinite"/></polyline>')
 
-          p.append(f'<text x="8" y="{h_px + 30}" font-family="JetBrains Mono, monospace" font-size="11" fill="#58a6ff">Snake eating your real GitHub contributions</text>')
+          p.append(f'<text x="8" y="{h_px + 30}" font-family="JetBrains Mono, monospace" font-size="11" fill="#58a6ff">Snake eating your real GitHub contributions — {total} this year</text>')
           p.append('</svg>')
 
-          Path("snake-custom.svg").write_text("\n".join(p))
-          print(f"snake-custom.svg: {len('\\n'.join(p))} bytes")
+          out = "\n".join(p)
+          Path("snake-custom.svg").write_text(out)
+          print(f"snake-custom.svg: {len(out)} bytes")
           PY
 
       - name: Commit and deploy

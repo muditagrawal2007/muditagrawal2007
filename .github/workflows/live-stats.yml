@@ -1,0 +1,144 @@
+name: Live Stats Updater
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"   # every 6 hours
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fetch live stats from GitHub API
+        id: stats
+        run: |
+          USER=muditagrawal2007
+
+          user_json=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/users/$USER)
+
+          total_repos=$(echo "$user_json" | jq '.public_repos')
+          followers=$(echo "$user_json" | jq '.followers')
+          following=$(echo "$user_json" | jq '.following')
+          gists=$(echo "$user_json" | jq '.public_gists')
+
+          repos_json=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/users/$USER/repos?per_page=100&type=owner")
+          total_stars=$(echo "$repos_json" | jq '[.[].stargazers_count] | add // 0')
+          total_forks=$(echo "$repos_json" | jq '[.[].forks_count] | add // 0')
+
+          events_json=$(curl -s -H "Accept: application/vnd.github+json" -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/search/issues?q=author:$USER+type:pr+is:merged&per_page=1")
+          total_merged=$(echo "$events_json" | jq '.total_count')
+
+          issues_json=$(curl -s -H "Accept: application/vnd.github+json" -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/search/issues?q=author:$USER+type:issue&per_page=1")
+          total_issues=$(echo "$issues_json" | jq '.total_count')
+
+          updated_at=$(date -u '+%Y-%m-%d %H:%M UTC')
+
+          cat <<EOF > /tmp/stats.txt
+          | Metric | Value | Updated |
+          |--------|------:|---------|
+          | 📦 Public repos | $total_repos | $updated_at |
+          | ⭐ Stars earned | $total_stars | $updated_at |
+          | 🔱 Total forks | $total_forks | $updated_at |
+          | 👥 Followers | $followers | $updated_at |
+          | 🎯 PRs merged | $total_merged | $updated_at |
+          | 🐛 Issues opened | $total_issues | $updated_at |
+          | 📝 Public gists | $gists | $updated_at |
+          EOF
+          echo "Stats captured."
+
+      - name: Build activity timeline
+        id: activity
+        run: |
+          USER=muditagrawal2007
+
+          events_json=$(curl -s -H "Accept: application/vnd.github+json" \
+            "https://api.gitsense.com/recent/${USER}?limit=8" 2>/dev/null || echo "[]")
+
+          evts=$(curl -s -H "Accept: application/vnd.github+json" -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/users/$USER/events/public?per_page=8")
+
+          activity_md=$(echo "$evts" | jq -r '.[] | select(.type=="PushEvent") | "1.  📝 Pushed commits to **\(.repo.name)**"' 2>/dev/null | head -5)
+          pr_activity=$(echo "$evts" | jq -r '.[] | select(.type=="PullRequestEvent") | "2.  🔀 \(.payload.action | ascii_upcase) PR in **\(.repo.name)**"' 2>/dev/null | head -3)
+
+          if [ -z "$activity_md" ]; then
+            activity_md="1.  🌟 _Auto-updating activity feed. Re-run workflow to refresh._"
+          fi
+
+          cat <<EOF > /tmp/activity.txt
+$activity_md
+$pr_activity
+EOF
+
+      - name: Update README
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import datetime
+
+          p = Path("README.md")
+          txt = p.read_text()
+
+          stats_block = ""
+          activity_block = ""
+
+          stats_path = Path("/tmp/stats.txt")
+          if stats_path.exists():
+              stats_block = stats_path.read_text().strip()
+
+          act_path = Path("/tmp/activity.txt")
+          if act_path.exists():
+              activity_block = act_path.read_text().strip()
+
+          live_header = f"<!-- Live stats last refreshed: {datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')} -->\n"
+
+          # Replace the live-stats placeholder block
+          import re
+          new = re.sub(
+              r"<!--START_SECTION:live-stats-->.*?<!--END_SECTION:live-stats-->",
+              f"<!--START_SECTION:live-stats-->\n<div align=\"center\">\n\n{stats_block}\n\n_Last refresh: {datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}_\n\n</div>\n<!--END_SECTION:live-stats-->",
+              txt,
+              flags=re.DOTALL,
+          )
+
+          # Replace the dynamic-stats placeholder block
+          new = re.sub(
+              r"<!--START_SECTION:dynamic-stats-->.*?<!--END_SECTION:dynamic-stats-->",
+              f"<!--START_SECTION:dynamic-stats-->\n<div align=\"center\">\n\n<img height=\"180em\" src=\"https://github-readme-stats.vercel.app/api?username=muditagrawal2007&show_icons=true&theme=tokyonight&hide_border=true&count_private=true&include_all_commits=true&v={datetime.datetime.utcnow().timestamp()}\"/>\n\n<img src=\"https://github-readme-activity-graph.vercel.app/graph?username=muditagrawal2007&theme=tokyo-night&hide_border=true&v={datetime.datetime.utcnow().timestamp()}\"/>\n\n_Refreshed: {datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}_\n\n</div>\n<!--END_SECTION:dynamic-stats-->",
+              new,
+              flags=re.DOTALL,
+          )
+
+          # Replace all <!--ts--> cache busters with current unix timestamp
+          new = new.replace("&t=<!--ts-->",  f"&t={int(datetime.datetime.utcnow().timestamp())}")
+          new = new.replace("&v=<!--ts-->",  f"&v={int(datetime.datetime.utcnow().timestamp())}")
+          new = new.replace("<!--ts-->",     f"{int(datetime.datetime.utcnow().timestamp())}")
+
+          # Replace the activity placeholder
+          new = re.sub(
+              r"<!--START_SECTION:activity-->.*?<!--END_SECTION:activity-->",
+              f"<!--START_SECTION:activity-->\n{activity_block}\n<!--END_SECTION:activity-->",
+              new,
+              flags=re.DOTALL,
+          )
+
+          p.write_text(new)
+          print("README updated.")
+          PY
+
+      - name: Commit
+        run: |
+          git diff --quiet README.md && echo "no changes" && exit 0
+          git config user.email "bot@muditagrawal.invalid"
+          git config user.name "live-stats-bot"
+          git commit -am "chore: auto-refresh live stats [skip ci]"
+          git push

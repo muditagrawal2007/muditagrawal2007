@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="600" height="450">
+  <defs>
+    <style type="text/css"><![CDATA[
+      .cube { transform-origin: 300px 220px; animation: rotateCube 12s infinite linear; }
+      @keyframes rotateCube {
+        0%   { transform: rotateX(0deg)   rotateY(0deg);   }
+        25%  { transform: rotateX(90deg)  rotateY(0deg);   }
+        50%  { transform: rotateX(90deg)  rotateY(90deg);  }
+        75%  { transform: rotateX(0deg)   rotateY(90deg);  }
+        100% { transform: rotateX(360deg) rotateY(360deg); }
+      }
+      .face {
+        fill-opacity: 0.85;
+        stroke: #58a6ff;
+        stroke-width: 2;
+      }
+      .face-ai       { fill: url(#g1); }
+      .face-stack    { fill: url(#g2); }
+      .face-os       { fill: url(#g3); }
+      .face-data     { fill: url(#g4); }
+      .face-cloud    { fill: url(#g5); }
+      .face-research { fill: url(#g6); }
+
+      .cube-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 700;
+        font-size: 22px;
+        fill: #ffffff;
+        text-anchor: middle;
+      }
+      .cube-sublabel {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        fill: #d0d7de;
+        text-anchor: middle;
+      }
+    ]]></style>
+    <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#a371f7"/>
+      <stop offset="100%" stop-color="#3b1c6e"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#1f6feb"/>
+      <stop offset="100%" stop-color="#0b2c5c"/>
+    </linearGradient>
+    <linearGradient id="g3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#2ea043"/>
+      <stop offset="100%" stop-color="#0d3f1c"/>
+    </linearGradient>
+    <linearGradient id="g4" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#f78166"/>
+      <stop offset="100%" stop-color="#6b2510"/>
+    </linearGradient>
+    <linearGradient id="g5" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#39c5cf"/>
+      <stop offset="100%" stop-color="#0d4a55"/>
+    </linearGradient>
+    <linearGradient id="g6" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#db61a2"/>
+      <stop offset="100%" stop-color="#5a1d3c"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#0d1117"/>
+
+  <g class="cube">
+    <!-- Cube size 140.  Vertex center (300,220). -->
+    <!-- Front face (z=0) -->
+    <g>
+      <rect class="face face-ai" x="160" y="150" width="280" height="140" rx="8"/>
+      <text class="cube-label" x="300" y="210">🤖 AI / ML</text>
+      <text class="cube-sublabel" x="300" y="240">PyTorch • TensorFlow • LLMs</text>
+    </g>
+    <!-- Right face (rotateY 90deg) -->
+    <g transform="translate(440,0) skewY(-35.264)">
+      <rect class="face face-stack" x="0" y="250" width="140" height="155" rx="8"
+            transform="scale(1,0.816)"/>
+      <text class="cube-label" x="70" y="370">⚙️ Full-Stack</text>
+      <text class="cube-sublabel" x="70" y="395">React • FastAPI</text>
+    </g>
+    <!-- Top face (rotateX 90deg) -->
+    <g transform="translate(160,150) skewX(-45)">
+      <rect class="face face-os" x="0" y="-140" width="280" height="140" rx="8"/>
+    </g>
+    <!-- Bottom face -->
+    <g transform="translate(160,290) skewX(45)">
+      <rect class="face face-data" x="0" y="0" width="280" height="140" rx="8"/>
+    </g>
+    <!-- Back face  -->
+    <g>
+      <rect class="face face-cloud" x="160" y="150" width="280" height="140" rx="8"
+            transform="translate(0,0)"/>
+      <text class="cube-label" x="300" y="240">☁️ Cloud</text>
+    </g>
+    <!-- Left face -->
+    <g transform="translate(160,150) skewY(35.264)">
+      <rect class="face face-research" x="-140" y="0" width="140" height="140" rx="8"/>
+      <text class="cube-label" x="-70" y="50">🔬 R&amp;D</text>
+      <text class="cube-sublabel" x="-70" y="75">Agents • Systems</text>
+    </g>
+  </g>
+
+  <!-- Decorative orbs around cube -->
+  <circle cx="80"  cy="80"  r="6" fill="#a371f7" opacity="0.6"/>
+  <circle cx="520" cy="100" r="4" fill="#1f6feb" opacity="0.6"/>
+  <circle cx="100" cy="370" r="5" fill="#39c5cf" opacity="0.6"/>
+  <circle cx="510" cy="350" r="7" fill="#db61a2" opacity="0.6"/>
+
+  <text x="300" y="430" font-family="JetBrains Mono, monospace" font-size="14"
+        fill="#8b949e" text-anchor="middle">
+    ⬆ Hover not supported · spins continuously · 3D CSS-animated SVG
+  </text>
+</svg>

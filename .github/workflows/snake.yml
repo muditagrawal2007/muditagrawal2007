@@ -1,31 +1,54 @@
-name: Generate Snake
+name: Generate Snake (3D + Standard)
 
 on:
+  push:
+    branches: [main]
   schedule:
     - cron: "0 */12 * * *"
-
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: write
-
     steps:
+      - uses: actions/checkout@v4
 
-      - uses: Platane/snk@v3
+      - name: Generate standard snake SVG
+        uses: Platane/snk@v3
         with:
           github_user_name: muditagrawal2007
           outputs: |
             dist/github-contribution-grid-snake.svg
             dist/github-contribution-grid-snake-dark.svg?palette=github-dark
 
-      - uses: crazy-max/ghaction-github-pages@v4
+      - name: Generate 3D variant (multi-path)
+        uses: Platane/snk@v3
+        with:
+          github_user_name: muditagrawal2007
+          outputs: |
+            dist/github-contribution-grid-3d.svg?color_snake=%23ff8c00&color_dots=%231a1a1a,%23111111,%23090909,%23505050,%23707070&color_blank=%230000000&snake_head=%23ff4500
+          svgStyle: "stroke-width:2;filter:drop-shadow(0 0 4px rgba(255,140,0,.7));"
+
+      - name: Deploy SVGs to gh-pages output branch
+        uses: crazy-max/ghaction-github-pages@v4
         with:
           target_branch: output
           build_dir: dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Mirror 3D variant to snake-3d branch
+        run: |
+          git config user.email "bot@muditagrawal.invalid"
+          git config user.name "snake-bot"
+          git checkout --orphan snake-3d || git checkout snake-3d
+          git rm -rf . 2>/dev/null || true
+          mkdir -p .github/workflows
+          cp .github/workflows/snake.yml .github/workflows/snake.yml 2>/dev/null || true
+          cp dist/github-contribution-grid-3d.svg ./github-contribution-grid-3d.svg
+          git add github-contribution-grid-3d.svg
+          git commit -m "chore: regenerate 3D snake [skip ci]" --allow-empty
+          git push origin snake-3d --force

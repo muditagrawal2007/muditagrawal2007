@@ -75,7 +75,9 @@ public:
 <!--START_SECTION:dynamic-stats-->
 <div align="center">
 
-_Auto-refreshed every 6h via [live-stats workflow](https://github.com/muditagrawal2007/muditagrawal2007/actions)_
+📦 **Public repos:** 77 · ⭐ **Stars earned:** 1 · 🔱 **Total forks:** 1 · 👥 **Followers:** 0 · 📝 **Public gists:** 0  
+
+_Auto-refreshed every 6h · last update: 2026-07-30 11:06 UTC_
 
 </div>
 <!--END_SECTION:dynamic-stats-->

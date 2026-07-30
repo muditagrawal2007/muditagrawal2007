@@ -33,20 +33,60 @@ jobs:
           ls -la cal.json
           python3 -c "import json; d=json.load(open('cal.json')); print('total:', d.get('data',{}).get('user',{}).get('contributionsCollection',{}).get('contributionCalendar',{}).get('totalContributions', 'ERR'))"
 
+      - name: Fallback if no data
+        if: failure()
+        run: |
+          python3 -c "
+          import json
+          from pathlib import Path
+          d = json.loads(Path('cal.json').read_text())
+          empty = (d.get('data') is None) or (d.get('data', {}).get('user') is None)
+          if empty or d.get('data', {}).get('user', {}).get('contributionsCollection', {}).get('contributionCalendar', {}).get('totalContributions', 0) == 0:
+              print('GraphQL returned no data — using git log for contributions')
+          "
+
       - name: Generate snake SVG
         run: |
           python3 - <<'PY'
-          import json, sys
+          import json, sys, os, subprocess
           from pathlib import Path
+          from datetime import datetime, timedelta
 
           data = json.loads(Path("cal.json").read_text())
-          if "data" not in data:
-              print("no data key, skipping"); sys.exit(0)
-          if not data["data"].get("user"):
-              print("no user data"); sys.exit(0)
+          cal = None
+          if data.get("data") and data["data"].get("user"):
+              cal = data["data"]["user"]["contributionsCollection"]["contributionCalendar"]
 
-          cal = data["data"]["user"]["contributionsCollection"]["contributionCalendar"]
-          grid = [[d["contributionCount"] for d in w["contributionDays"]] for w in cal["weeks"]]
+          # Fallback: derive a contribution grid from git log of the user's public activity
+          if not cal or cal.get("totalContributions", 0) == 0:
+              print("Building contribution grid from git log fallback…")
+              cutoff = (datetime.utcnow() - timedelta(days=365)).strftime("%Y-%m-%d")
+              r = subprocess.run(
+                  ["git", "log", "--pretty=format:%ad", "--date=short", "--all", "--no-merges"],
+                  cwd=Path(__file__).parent, capture_output=True, text=True
+              )
+              dates = sorted(set(r.stdout.splitlines()))
+              # Build full year-grid
+              grid = []
+              sun = datetime.utcnow() - timedelta(days=365)
+              sun = sun - timedelta(days=sun.weekday() + 1 % 7)  # back up to a Sunday
+              weeks = 53
+              counts = {}
+              for d in dates:
+                  if d < cutoff:
+                      continue
+                  counts[d] = counts.get(d, 0) + 1
+              cur = sun
+              while cur.weekday() != 6:
+                  cur += timedelta(days=1)
+              for _ in range(weeks):
+                  col = []
+                  for _ in range(7):
+                      col.append(counts.get(cur.strftime("%Y-%m-%d"), 0))
+                      cur += timedelta(days=1)
+                  grid.append(col)
+          else:
+              grid = [[d["contributionCount"] for d in w["contributionDays"]] for w in cal["weeks"]]
 
           cells = [(di, wi, c) for wi, col in enumerate(grid) for di, c in enumerate(col) if c > 0]
           print(f"Grid: {len(grid)} weeks, {len(cells)} active cells")

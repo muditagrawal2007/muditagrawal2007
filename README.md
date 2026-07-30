@@ -186,5 +186,232 @@ src="https://github-readme-stats.vercel.app/api/top-langs/?username=muditagrawal
 </div>
 
 <!-- ===================== END OF PART 1 ===================== -->
+---
+
+# 🏆 GitHub Achievements
+
+<div align="center">
+
+<img src="https://github-profile-trophy.vercel.app/?username=muditagrawal2007&theme=tokyonight&column=4&margin-w=15&margin-h=15&no-frame=true"/>
+
+</div>
+
+---
+
+# 🐍 Contribution Snake
+
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/muditagrawal2007/muditagrawal2007/output/github-contribution-grid-snake-dark.svg"/>
+
+</div>
+
+---
+
+# 🚀 Featured Projects
+
+<div align="center">
+
+<table>
+
+<tr>
+
+<td width="50%">
+
+## 🤖 Tenali
+
+AI-powered educational platform focused on
+interactive learning and intelligent assistance.
+
+**Tech Stack**
+
+- FastAPI
+- React
+- PostgreSQL
+- AI
+
+</td>
+
+<td width="50%">
+
+## 🚌 Smart Bus Management
+
+Government transport management system
+with smart route planning and real-time monitoring.
+
+**Tech Stack**
+
+- React
+- Node.js
+- PostgreSQL
+
+</td>
+
+</tr>
+
+<tr>
+
+<td width="50%">
+
+## 🌟 Spurti
+
+AI learning ecosystem with
+leaderboards, XP, organizations,
+and personalized learning.
+
+**Tech Stack**
+
+- FastAPI
+- PostgreSQL
+- React
+
+</td>
+
+<td width="50%">
+
+## 🤖 AI Agents
+
+Autonomous AI agents for
+workflow automation,
+reasoning, and productivity.
+
+**Tech Stack**
+
+- Python
+- LLMs
+- FastAPI
+
+</td>
+
+</tr>
+
+</table>
+
+</div>
+
+---
+
+# 📈 GitHub Overview
+
+<div align="center">
+
+| 🚀 | Description |
+|----|-------------|
+| 💻 Passion | Building useful software |
+| 🤖 Favorite Domain | Artificial Intelligence |
+| 🌱 Learning | Kubernetes & System Design |
+| ⭐ Goal | Contribute to impactful Open Source |
+| 🎯 Mission | Solve real-world problems through technology |
+
+</div>
+
+---
+
+# 📚 Current Focus
+
+```text
+🚀 Artificial Intelligence
+████████████████████ 100%
+
+⚙️ Full Stack Development
+██████████████████░░ 90%
+
+☁️ Cloud & Kubernetes
+██████████████░░░░░░ 70%
+
+🧠 System Design
+█████████████░░░░░░░ 65%
+
+🤖 AI Agents
+█████████████████░░░ 85%
+```
+
+---
+
+# 💡 Fun Fact
+
+<div align="center">
+
+```text
+while(alive){
+
+    Learn();
+
+    Build();
+
+    Share();
+
+    Improve();
+
+}
+```
+
+</div>
+
+---
+
+# 🌌 Profile Summary
+
+<div align="center">
+
+<img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=muditagrawal2007&theme=tokyonight"/>
+
+</div>
+
+---
+
+# 📊 Productive Time
+
+<div align="center">
+
+<img src="https://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=muditagrawal2007&theme=tokyonight"/>
+
+</div>
+
+---
+
+# 📦 Repository Languages
+
+<div align="center">
+
+<img src="https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=muditagrawal2007&theme=tokyonight"/>
+
+</div>
+
+---
+
+# 📈 Commit Statistics
+
+<div align="center">
+
+<img src="https://github-profile-summary-cards.vercel.app/api/cards/stats?username=muditagrawal2007&theme=tokyonight"/>
+
+</div>
+
+---
+
+# ⭐ Quote
+
+<div align="center">
+
+> **"Dream big. Build bigger. Ship the impossible."**
+
+</div>
+
+---
+
+<div align="center">
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:2C5364,50:203A43,100:0F2027&height=150&section=footer"/>
+
+### ⭐ Thanks for visiting my profile!
+
+If you like my work, consider following me and checking out my repositories.
+
+🚀 Happy Coding!
+
+</div>
+
+
 
 [![An image of @muditagrawal2007's Holopin badges, which is a link to view their full Holopin profile](https://holopin.me/muditagrawal2007)](https://holopin.io/@muditagrawal2007)

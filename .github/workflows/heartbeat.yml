@@ -1,0 +1,31 @@
+name: Heartbeat
+
+on:
+  schedule:
+    - cron: "0 */12 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  beat:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Touch last-updated timestamp
+        run: |
+          echo "<!-- last heartbeat: $(date -u '+%Y-%m-%d %H:%M UTC') -->" > .heartbeat
+          echo ""  >> .heartbeat
+          echo "Last profile touch by the heartbeat workflow." >> .heartbeat
+
+      - name: Commit
+        run: |
+          git config user.email "bot@muditagrawal.invalid"
+          git config user.name  "heartbeat-bot"
+          git add .heartbeat
+          git commit -m "chore: heartbeat [skip ci]" || echo "no changes"
+          git push

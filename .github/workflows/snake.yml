@@ -40,7 +40,6 @@ jobs:
           live_total = live.get("totalContributions", 0)
           Path("cal_live.json").write_text(json.dumps(live, indent=2) if live and live_total > 0 else "{}")
 
-          # If live has 0 contributions (workflow-token limitation), use committed snapshot
           if live_total == 0:
               try:
                   committed = Path("cal.json").read_text()
@@ -80,7 +79,7 @@ jobs:
           p.append('<?xml version="1.0" encoding="UTF-8"?>')
           p.append(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w_px + 32} {h_px + 64}" width="{w_px + 32}" height="{h_px + 64}">')
           p.append('<style>')
-          p.append('.c0{fill:#161b22}.c1{fill:#01311f}.c2{fill:#034525}.c3{fill:#0f6d31}.c4{fill:#00c647}rect.cell{rx:2;ry:2}.snake{fill:#ff8c00;stroke:#ff4500;stroke-width:1.5}.snake-head{fill:#ff1744}')
+          p.append('.c0{fill:#161b22}.c1{fill:#01311f}.c2{fill:#034525}.c3{fill:#0f6d31}.c4{fill:#00c647}rect.cell{rx:2;ry:2}rect.snake-body{fill:#ff8c00;stroke:#ff4500;stroke-width:1.5;rx:2}rect.snake-head{fill:#ff1744;stroke:#fff;stroke-width:0.5;rx:2}')
           p.append('</style>')
           p.append('<rect width="100%" height="100%" fill="#0d1117"/>')
 
@@ -90,19 +89,46 @@ jobs:
                   x, y = wi * cell_size + 4, (6 - di) * cell_size + 4
                   p.append(f'<rect class="cell {cls}" x="{x}" y="{y}" width="14" height="14"/>')
 
-          ordered = sorted(cells, key=lambda c: (c[1], c[0]))
-          segs = [(wi*cell_size+11, (6-di)*cell_size+11, i) for i, (di, wi, _) in enumerate(ordered[-30:])]
+          # Pick 1 cell per week, oldest first -> newest (snake "grows" left to right)
+          ordered_cells = sorted(cells, key=lambda c: c[1], reverse=True)
+          seen, path_cells = set(), []
+          for di, wi, c in ordered_cells:
+              if wi not in seen:
+                  seen.add(wi)
+                  path_cells.append((di, wi, c))
+          path_cells.sort(key=lambda c: c[1])
+          path_cells = path_cells[-52:]
 
-          for cx, cy, i in segs:
-              p.append(f'<circle class="snake" cx="{cx}" cy="{cy}" r="5"><animate attributeName="opacity" values="1;.4;1" dur="1.5s" begin="{i*0.05:.2f}s" repeatCount="indefinite"/></circle>')
+          print(f"Snake visits {len(path_cells)} cells across {len(set(c[1] for c in path_cells))} weeks")
 
-          if segs:
-              cx, cy, _ = segs[-1]
-              p.append(f'<circle class="snake-head" cx="{cx}" cy="{cy}" r="6"><animate attributeName="r" values="6;8;6" dur="0.6s" repeatCount="indefinite"/></circle>')
+          # Snake body: per-cell rectangles with staggered opacity pulse
+          for i, (di, wi, _) in enumerate(path_cells):
+              x = wi * cell_size + 4
+              y = (6 - di) * cell_size + 4
+              delay = i * 0.04
+              op = 0.4 + (i / len(path_cells)) * 0.6
+              p.append(f'<rect class="snake-body" x="{x}" y="{y}" width="14" height="14" opacity="{op:.2f}">')
+              p.append(f'<animate attributeName="opacity" values="{op:.2f};{op*0.4:.2f};{op:.2f}" dur="1.2s" begin="{delay:.2f}s" repeatCount="indefinite"/>')
+              p.append('</rect>')
 
-          if len(segs) >= 2:
-              pts = " ".join(f"{x},{y}" for x, y, _ in segs[-20:])
-              p.append(f'<polyline points="{pts}" fill="none" stroke="#ff8c00" stroke-width="2" opacity=".4"><animate attributeName="opacity" values=".2;.8;.2" dur="3s" repeatCount="indefinite"/></polyline>')
+          # Snake head
+          if path_cells:
+              di, wi, _ = path_cells[-1]
+              x = wi * cell_size + 4
+              y = (6 - di) * cell_size + 4
+              p.append(f'<rect class="snake-head" x="{x}" y="{y}" width="14" height="14">')
+              p.append(f'<animate attributeName="width"  values="14;18;14" dur="0.6s" repeatCount="indefinite"/>')
+              p.append(f'<animate attributeName="height" values="14;18;14" dur="0.6s" repeatCount="indefinite"/>')
+              p.append(f'<animate attributeName="x" values="{x};{x-2};{x}" dur="0.6s" repeatCount="indefinite"/>')
+              p.append(f'<animate attributeName="y" values="{y};{y-2};{y}" dur="0.6s" repeatCount="indefinite"/>')
+              p.append('</rect>')
+
+          # Connecting trail
+          if len(path_cells) >= 2:
+              pts = " ".join(f"{wi*cell_size+11},{(6-di)*cell_size+11}" for di, wi, _ in path_cells)
+              p.append(f'<polyline points="{pts}" fill="none" stroke="#ff4500" stroke-width="2" opacity="0.6" stroke-linecap="round" stroke-linejoin="round">')
+              p.append('<animate attributeName="stroke-dasharray" values="0 20;20 0" dur="2s" repeatCount="indefinite"/>')
+              p.append('</polyline>')
 
           p.append(f'<text x="8" y="{h_px + 30}" font-family="JetBrains Mono, monospace" font-size="11" fill="#58a6ff">Snake eating your real GitHub contributions — {total} this year</text>')
           p.append('</svg>')

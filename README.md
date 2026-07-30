@@ -53,17 +53,17 @@ public:
 
 📦 **Public repos:** 77 · ⭐ **Stars earned:** 1 · 🔱 **Total forks:** 1 · 👥 **Followers:** 0 · 📝 **Public gists:** 0  
 
-_Auto-refreshed every 6h · last update: 2026-07-30 11:24 UTC_
+_🔄 Last refresh: 2026-07-30 11:27 UTC · auto-updates hourly · [view source](https://github.com/muditagrawal2007/muditagrawal2007/actions)_
 
 </div>
 <!--END_SECTION:dynamic-stats-->
 
 <div align="center">
 
-<img height="180em" src="https://github-readme-stats.vercel.app/api?username=muditagrawal2007&show_icons=true&theme=tokyonight&hide_border=true&include_all_commits=true"/>
-<img height="180em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=muditagrawal2007&layout=compact&theme=tokyonight&hide_border=true"/>
+<img height="180em" src="https://github-readme-stats.vercel.app/api?username=muditagrawal2007&show_icons=true&theme=tokyonight&hide_border=true&include_all_commits=true&t=1785410829"/>
+<img height="180em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=muditagrawal2007&layout=compact&theme=tokyonight&hide_border=true&t=1785410829"/>
 
-<img src="https://github-readme-activity-graph.vercel.app/graph?username=muditagrawal2007&theme=tokyo-night&hide_border=true"/>
+<img src="https://github-readme-activity-graph.vercel.app/graph?username=muditagrawal2007&theme=tokyo-night&hide_border=true&t=1785410829"/>
 
 </div>
 

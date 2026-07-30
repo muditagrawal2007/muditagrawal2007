@@ -20,17 +20,15 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          set -e
-          cat > /tmp/cal.json <<'QUERYEOF'
-          {
-            "query": "{ user(login: \"muditagrawal2007\") { contributionsCollection { contributionCalendar { weeks { contributionDays { date contributionCount weekday } } } } } }"
-          }
-          QUERYEOF
           curl -sL \
             -H "Authorization: Bearer $GH_TOKEN" \
-            -H "Content-Type: application/json" \
-            -d @/tmp/cal.json \
+            -H "Accept: application/vnd.github+json" \
+            -X POST \
+            -d '{"query":"{ user(login: \"muditagrawal2007\") { contributionsCollection { contributionCalendar { weeks { contributionDays { date contributionCount weekday } } } } } }"}' \
             "https://api.github.com/graphql" > cal.json
+          ls -la cal.json
+          head -c 200 cal.json
+          echo ""
 
       - name: Generate snake SVG
         run: |
@@ -38,12 +36,20 @@ jobs:
           import json, sys
           from pathlib import Path
 
-          cal = json.loads(Path("cal.json").read_text())["data"]["user"]["contributionsCollection"]["contributionCalendar"]
+          raw = Path("cal.json").read_text()
+          if not raw.strip():
+              print("empty cal.json"); sys.exit(0)
+          data = json.loads(raw)
+          if "data" not in data:
+              print("no data key in cal.json:", data); sys.exit(0)
+
+          cal = data["data"]["user"]["contributionsCollection"]["contributionCalendar"]
           grid = [[d["contributionCount"] for d in w["contributionDays"]] for w in cal["weeks"]]
 
           cells = [(di, wi, c) for wi, col in enumerate(grid) for di, c in enumerate(col) if c > 0]
+          print(f"Grid: {len(grid)} weeks, {len(cells)} active cells")
           if not cells:
-              print("no cells"); sys.exit(0)
+              sys.exit(0)
 
           cell_size = 16
           w_px = len(grid) * cell_size
@@ -81,7 +87,7 @@ jobs:
           p.append('</svg>')
 
           Path("snake-custom.svg").write_text("\n".join(p))
-          print("snake-custom.svg:", len("\n".join(p)), "bytes")
+          print(f"snake-custom.svg: {len('\\n'.join(p))} bytes")
           PY
 
       - name: Commit and deploy

@@ -12,132 +12,63 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Fetch live stats
-        id: stats
+      - name: Fetch fresh stats
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -e
           USER=muditagrawal2007
-
-          user_json=$(curl -sL -H "Authorization: token $GH_TOKEN" "https://api.github.com/users/$USER")
-          echo "$user_json" > /tmp/user.json
-
-          repos_json=$(curl -sL -H "Authorization: token $GH_TOKEN" \
-            "https://api.github.com/users/$USER/repos?per_page=100&type=owner")
-          echo "$repos_json" > /tmp/repos.json
-
-          echo "Snapshots saved."
-
-      - name: Render activity timeline
-        id: activity
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -e
-          USER=muditagrawal2007
-          evts=$(curl -sL -H "Accept: application/vnd.github+json" \
-            -H "Authorization: token $GH_TOKEN" \
-            "https://api.github.com/users/$USER/events/public?per_page=20")
-
-          # Extract pushed commits (top 5)
-          printf "%s\n" "$evts" \
-            | jq -r '.[] | select(.type=="PushEvent") | "1.  📝 Pushed to **\(.repo.name)** (\(.payload.size) commit\(if .payload.size==1 then "" else "s" end))"' \
-            > /tmp/push_lines.txt || true
-          head -5 /tmp/push_lines.txt > /tmp/push_top5.txt || true
-
-          cat /tmp/push_top5.txt > /tmp/activity_lines.txt
-          echo "_Auto-updated every 6 hours. Run workflow manually to refresh sooner._" \
-            >> /tmp/activity_lines.txt
+          curl -sL -H "Authorization: token $GH_TOKEN" \
+            "https://api.github.com/users/$USER" > /tmp/user.json
+          curl -sL -H "Authorization: token $GH_TOKEN" \
+            "https://api.github.com/users/$USER/repos?per_page=100&type=owner" > /tmp/repos.json
 
       - name: Update README
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -e
-          python3 - <<'PYEOF'
+          python3 <<'PYEOF'
           from pathlib import Path
-          import datetime, json, subprocess, sys
+          import datetime, json, re
 
           p = Path("README.md")
           txt = p.read_text()
 
-          user = json.loads(Path("/tmp/user.json").read_text())
+          user  = json.loads(Path("/tmp/user.json").read_text())
           repos = json.loads(Path("/tmp/repos.json").read_text())
 
-          total_repos   = user.get("public_repos", 0)
-          followers     = user.get("followers", 0)
-          gists         = user.get("public_gists", 0)
-          total_stars   = sum(r.get("stargazers_count", 0) for r in repos)
-          total_forks   = sum(r.get("forks_count", 0) for r in repos)
-
           now = datetime.datetime.utcnow()
-          updated_at = now.strftime("%Y-%m-%d %H:%M UTC")
-          ts = int(now.timestamp())
+          upd = now.strftime("%Y-%m-%d %H:%M UTC")
 
-          stats_block = (
-              "| Metric | Value | Updated |\n"
-              "|--------|------:|---------|\n"
-              f"| 📦 Public repos | {total_repos} | {updated_at} |\n"
-              f"| ⭐ Stars earned | {total_stars} | {updated_at} |\n"
-              f"| 🔱 Total forks | {total_forks} | {updated_at} |\n"
-              f"| 👥 Followers | {followers} | {updated_at} |\n"
-              f"| 📝 Public gists | {gists} | {updated_at} |\n"
-          )
-
-          # Dynamic stats block (referencing fresh cards with cache busting)
-          dyn_block = (
-              "<div align=\"center\">\n\n"
-              f"<img height=\"180em\" src=\"https://github-readme-stats.vercel.app/api?username=muditagrawal2007&show_icons=true&theme=tokyonight&hide_border=true&count_private=true&include_all_commits=true&t={ts}\"/>\n\n"
-              f"<img height=\"180em\" src=\"https://github-readme-stats.vercel.app/api/top-langs/?username=muditagrawal2007&layout=compact&theme=tokyonight&hide_border=true&t={ts}\"/>\n\n"
-              f"_Refreshed: {updated_at}_\n\n"
-              "</div>\n"
-          )
-
-          # Activity lines from previous step
-          act_path = Path("/tmp/activity_lines.txt")
-          if act_path.exists():
-              activity = act_path.read_text().strip()
-          else:
-              activity = "1.  🌟 _Auto-updating feed — re-run to refresh_"
-
-          import re
-          new = re.sub(
-              r"<!--START_SECTION:live-stats-->.*?<!--END_SECTION:live-stats-->",
-              f"<!--START_SECTION:live-stats-->\n<div align=\"center\">\n\n{stats_block}\n\n</div>\n<!--END_SECTION:live-stats-->",
-              txt, flags=re.DOTALL,
+          block = (
+              f"📦 **Public repos:** {user.get('public_repos', 0)} · "
+              f"⭐ **Stars earned:** {sum(r.get('stargazers_count', 0) for r in repos)} · "
+              f"🔱 **Total forks:** {sum(r.get('forks_count', 0) for r in repos)} · "
+              f"👥 **Followers:** {user.get('followers', 0)} · "
+              f"📝 **Public gists:** {user.get('public_gists', 0)}  \n\n"
+              f"_Auto-refreshed every 6h · last update: {upd}_"
           )
 
           new = re.sub(
               r"<!--START_SECTION:dynamic-stats-->.*?<!--END_SECTION:dynamic-stats-->",
-              f"<!--START_SECTION:dynamic-stats-->\n{dyn_block}<!--END_SECTION:dynamic-stats-->",
-              new, flags=re.DOTALL,
+              f"<!--START_SECTION:dynamic-stats-->\n<div align=\"center\">\n\n{block}\n\n</div>\n<!--END_SECTION:dynamic-stats-->",
+              txt, flags=re.DOTALL,
           )
-
-          new = re.sub(
-              r"<!--START_SECTION:activity-->.*?<!--END_SECTION:activity-->",
-              f"<!--START_SECTION:activity-->\n{activity}\n<!--END_SECTION:activity-->",
-              new, flags=re.DOTALL,
-          )
-
-          # Cache-bust all <!--ts--> markers in img URLs
-          for marker in ("&t=<!--ts-->", "&v=<!--ts-->", "<!--ts-->"):
-              new = new.replace(marker, f"{ts}")
 
           p.write_text(new)
           print("README updated.")
           PYEOF
 
-      - name: Commit changes
+      - name: Commit if changed
         run: |
-          git diff --quiet README.md && echo "No changes" && exit 0
+          git diff --quiet README.md && { echo "No changes"; exit 0; }
           git config user.email "live-stats-bot@users.noreply.github.com"
-          git config user.name "live-stats-bot"
+          git config user.name   "live-stats-bot"
           git add README.md
-          git commit -m "chore: auto-refresh live stats [skip ci]"
+          git commit -m "chore: refresh live stats [skip ci]"
           git push

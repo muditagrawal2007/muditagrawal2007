@@ -52,9 +52,9 @@ public:
 Live snapshot of open pull requests in upstream repos (auto-refreshed every 6h by `pr-radar.yml`).
 
 <!--START_SECTION:pr-radar-->
-_No open PRs · last check: 2026-07-31 19:44 UTC_
+_No open PRs · last check: 2026-08-01 08:30 UTC_
 
-<sub>_🔄 Last refresh: 2026-07-31 19:44 UTC</sub>
+<sub>_🔄 Last refresh: 2026-08-01 08:30 UTC</sub>
 <!--END_SECTION:pr-radar-->
 
 ---
@@ -110,18 +110,18 @@ _No open PRs · last check: 2026-07-31 19:44 UTC_
 ### 📈 Recent Activity
 
 <!--START_SECTION:activity-->
-1.  🔀 **MERGED** PR in **[krushit1307/CampusConnect]** — 
-1.  🔀 **MERGED** PR in **[krushit1307/CampusConnect]** — 
-1.  🔀 **MERGED** PR in **[krushit1307/CampusConnect]** — 
-1.  🔀 **MERGED** PR in **[krushit1307/CampusConnect]** — 
-1.  🔀 **MERGED** PR in **[bitflicker64/Termstory]** — 
-1.  🔀 **MERGED** PR in **[bitflicker64/Termstory]** — 
-1.  🔀 **MERGED** PR in **[bitflicker64/Termstory]** — 
-1.  🔀 **MERGED** PR in **[bitflicker64/Termstory]** — 
-1.  🔀 **MERGED** PR in **[bitflicker64/Termstory]** — 
-1.  🔀 **MERGED** PR in **[bitflicker64/Termstory]** — 
+1.  ✨ Created branch in **[muditagrawal2007/Termstory]**
+1.  🔀 **OPENED** PR in **[muditagrawal2007/Indux]** — 
+1.  ✨ Created branch in **[muditagrawal2007/Indux]**
+1.  📌 ForkEvent on **[niteshkumar7557/crux]**
+1.  💬 Commented on #16093 in **[laurent22/joplin]**
+1.  💬 Commented on #16117 in **[laurent22/joplin]**
+1.  💬 Commented on #16089 in **[laurent22/joplin]**
+1.  🔀 **OPENED** PR in **[Nebulyn-Labs/MediFlow]** — 
+1.  ✨ Created branch in **[muditagrawal2007/MediFlow]**
+1.  🔀 **OPENED** PR in **[Nebulyn-Labs/MediFlow]** — 
 
-<sub>_🔄 Last refresh: 2026-07-31 19:44 UTC</sub>
+<sub>_🔄 Last refresh: 2026-08-01 08:30 UTC</sub>
 <!--END_SECTION:activity-->
 
 ---

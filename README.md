@@ -52,9 +52,9 @@ public:
 Live snapshot of open pull requests in upstream repos (auto-refreshed every 6h by `pr-radar.yml`).
 
 <!--START_SECTION:pr-radar-->
-_No open PRs · last check: 2026-08-02 08:33 UTC_
+_No open PRs · last check: 2026-08-02 19:20 UTC_
 
-<sub>_🔄 Last refresh: 2026-08-02 08:33 UTC</sub>
+<sub>_🔄 Last refresh: 2026-08-02 19:20 UTC</sub>
 <!--END_SECTION:pr-radar-->
 
 ---
@@ -110,18 +110,18 @@ _No open PRs · last check: 2026-08-02 08:33 UTC_
 ### 📈 Recent Activity
 
 <!--START_SECTION:activity-->
-1.  🔀 **MERGED** PR in **[khushi897920-lang/hercycle-ai]** — 
-1.  ⬆️ Pushed 0 commit(s) to **[muditagrawal2007/hercycle-ai]**()
-1.  🔀 **MERGED** PR in **[khushi897920-lang/hercycle-ai]** — 
-1.  🔀 **MERGED** PR in **[khushi897920-lang/hercycle-ai]** — 
-1.  🔀 **MERGED** PR in **[khushi897920-lang/hercycle-ai]** — 
-1.  🔀 **MERGED** PR in **[khushi897920-lang/hercycle-ai]** — 
-1.  🔀 **MERGED** PR in **[khushi897920-lang/hercycle-ai]** — 
-1.  🔀 **MERGED** PR in **[khushi897920-lang/hercycle-ai]** — 
-1.  🔀 **MERGED** PR in **[khushi897920-lang/hercycle-ai]** — 
-1.  🔀 **MERGED** PR in **[khushi897920-lang/hercycle-ai]** — 
+1.  🔀 **MERGED** PR in **[Nebulyn-Labs/MediFlow]** — 
+1.  🔀 **MERGED** PR in **[Nebulyn-Labs/MediFlow]** — 
+1.  🔀 **MERGED** PR in **[Nebulyn-Labs/MediFlow]** — 
+1.  🔀 **MERGED** PR in **[krushit1307/CampusConnect]** — 
+1.  🔀 **MERGED** PR in **[krushit1307/CampusConnect]** — 
+1.  🔀 **MERGED** PR in **[krushit1307/CampusConnect]** — 
+1.  🔀 **MERGED** PR in **[krushit1307/CampusConnect]** — 
+1.  🔀 **OPENED** PR in **[krushit1307/CampusConnect]** — 
+1.  ✨ Created branch in **[muditagrawal2007/CampusConnect]**
+1.  🔀 **OPENED** PR in **[krushit1307/CampusConnect]** — 
 
-<sub>_🔄 Last refresh: 2026-08-02 08:33 UTC</sub>
+<sub>_🔄 Last refresh: 2026-08-02 19:20 UTC</sub>
 <!--END_SECTION:activity-->
 
 ---

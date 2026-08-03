@@ -48,31 +48,6 @@ public:
 ---
 
 
-### 📊 GitHub Stats
-
-<!-- Stats image hosts are health-checked each run; dead mirrors are swapped automatically. -->
-<div align="center">
-
-<img height="180em" src="https://github-readme-stats-one-bice.vercel.app/api?username=muditagrawal2007&show_icons=true&theme=transparent&hide_border=true&title_color=58A6FF&text_color=BDC3CF&icon_color=58A6FF&count_private=true&include_all_commits=true&t=1785410981" alt="GitHub stats"/>
-<img height="180em" src="https://streak-stats.demolab.com/?user=muditagrawal2007&theme=transparent&hide_border=true&ring=58A6FF&fire=58A6FF&currStreakNum=BDC3CF&sideNums=BDC3CF&sideLabels=BDC3CF&currStreakLabel=58A6FF&v=1785410981" alt="contribution streak"/>
-
-</div>
-
-<div align="center">
-
-<img src="https://github-readme-stats-one-bice.vercel.app/api/top-langs/?username=muditagrawal2007&layout=compact&theme=transparent&hide_border=true&title_color=58A6FF&text_color=BDC3CF&t=1785410981" alt="top languages"/>
-
-</div>
-
-<div align="center">
-
-<img src="https://github-readme-activity-graph.vercel.app/graph?username=muditagrawal2007&theme=github-compact&hide_border=true&area=true&v=1785410981" width="100%" alt="contribution activity graph"/>
-
-</div>
-
-<sub>stats hosts: stats=github-readme-stats-one-bice.vercel.app✓ · streak=streak-stats.demolab.com✓ · langs=github-readme-stats-one-bice.vercel.app✓ · activity_graph=github-readme-activity-graph.vercel.app✓</sub>
-
----
 
 ### 🛠️ Tech Stack
 

@@ -83,21 +83,3 @@ public:
 </div>
 
 ---
-
-### 🤝 Connect
-
-<div align="center">
-
-[![GitHub](https://img.shields.io/badge/GitHub-@muditagrawal2007-181717?style=for-the-badge&logo=github)](https://github.com/muditagrawal2007)
-[![Repos](https://img.shields.io/badge/All_Repos-Click_Here-58A6FF?style=for-the-badge&logo=github)](https://github.com/muditagrawal2007?tab=repositories)
-[![Sponsor](https://img.shields.io/badge/❤️_Sponsor-Me-red?style=for-the-badge&logo=github-sponsors)](https://github.com/sponsors/muditagrawal2007)
-
-</div>
-
-<br>
-
-<div align="center">
-
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:2C5364,50:203A43,100:0F2027&height=120&section=footer"/>
-
-</div>

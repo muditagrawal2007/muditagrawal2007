@@ -22,7 +22,7 @@
 <rect class="cell c0" x="36" y="84" width="14" height="14"/>
 <rect class="cell c0" x="36" y="68" width="14" height="14"/>
 <rect class="cell c2" x="36" y="52" width="14" height="14"/>
-<rect class="cell c2" x="36" y="36" width="14" height="14"/>
+<rect class="cell c1" x="36" y="36" width="14" height="14"/>
 <rect class="cell c0" x="36" y="20" width="14" height="14"/>
 <rect class="cell c0" x="36" y="4" width="14" height="14"/>
 <rect class="cell c0" x="52" y="100" width="14" height="14"/>
@@ -520,5 +520,5 @@
 <polyline points="11,75 43,59 59,91 75,91 91,75 107,75 123,91 139,43 155,91 187,91 203,107 219,91 235,75 299,75 315,107 331,107 347,107 363,107 379,107 395,107 411,107 427,107 443,107 459,107 475,107 491,107 507,107 523,107 539,107 555,107 571,107 587,107 603,107 619,107 635,107 651,107 667,107 683,107 699,107 715,107 731,107 747,107 763,107 779,107 795,107 811,107 827,11" fill="none" stroke="#ff4500" stroke-width="2" opacity="0.6" stroke-linecap="round" stroke-linejoin="round">
 <animate attributeName="stroke-dasharray" values="0 20;20 0" dur="2s" repeatCount="indefinite"/>
 </polyline>
-<text x="8" y="142" font-family="JetBrains Mono, monospace" font-size="11" fill="#58a6ff">Snake eating your real GitHub contributions — 1541 this year</text>
+<text x="8" y="142" font-family="JetBrains Mono, monospace" font-size="11" fill="#58a6ff">Snake eating your real GitHub contributions — 1540 this year</text>
 </svg>
